@@ -11,13 +11,12 @@ public class Server {
 	private ServerSocket serverSocket;
 
 	public Server(int port) {
-	    try {
-	      serverSocket = new ServerSocket(port);
-	    } catch (Exception e) {
-	      throw new ConexionException(e);
-	    }
-	  }
-	
+		try {
+			serverSocket = new ServerSocket(port);
+		} catch (Exception e) {
+			throw new ConexionException(e);
+		}
+	}
 
 	public Conexion esperarConexion() {
 		// Intentamos aceptar una conexion. Si no hay ninguna en cola espera

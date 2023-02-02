@@ -7,19 +7,18 @@ public class MainFileServerApp {
 	private static final int PUERTO = 4321;
 
 	public static void main(String[] args) {
-		
+
 		// Creamos el servidor con el puerto
 		Server servidor = new Server(PUERTO);
 
 		// Esperamos conexiones una detrás de otra (Si se produce un error, se termina)
-		Conexion conexion = null;		
-		while ((conexion = servidor.esperarConexion()) != null) {			
+		Conexion conexion = null;
+		while ((conexion = servidor.esperarConexion()) != null) {
 			// Creamos un hilo para procesar los archivos de la nueva conexion
 			Worker worker = new Worker(conexion);
 			worker.start();
 		}
 
 	}
-	
 
 }

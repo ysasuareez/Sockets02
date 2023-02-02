@@ -22,13 +22,12 @@ public class ConexionSocket implements Conexion {
 
 	}
 
-
 	@Override
 	public void enviar(String mensaje) {
 
 		// Si el socket está conectado
 		if (socket.isConnected()) {
-			
+
 			try {
 				out.writeUTF(mensaje);
 				out.flush();
@@ -37,7 +36,7 @@ public class ConexionSocket implements Conexion {
 				// Lanzamos una excepción hacia arriba
 				throw new ConexionException(e);
 			}
-			
+
 		} else {
 			// Si el socket no está conectado, lanzamos una excepción
 			throw new ConexionException("Socket no conectado");
@@ -72,16 +71,16 @@ public class ConexionSocket implements Conexion {
 	public void enviarBytes(byte[] contenidoFicheroBytes) {
 
 		if (socket.isConnected()) {
-			
+
 			try {
 				out.writeInt(contenidoFicheroBytes.length);
-				//Enviamos el array que queremos que reciban
+				// Enviamos el array que queremos que reciban
 				out.write(contenidoFicheroBytes);
 				out.flush();
 			} catch (IOException e) {
 				throw new ConexionException(e);
 			}
-			
+
 		} else {
 			throw new ConexionException("Socket no conectado");
 		}
@@ -93,10 +92,11 @@ public class ConexionSocket implements Conexion {
 		// Si el socket está conectado
 		if (socket.isConnected()) {
 
-			try {	
-				
+			try {
+
+				// Leemos la longitud del array que nos ha enviado el out
 				int longitud = in.readInt();
-				//Leemos los bytes obtenidos y los introducimos en el array
+				// Leemos los bytes obtenidos y los introducimos en el array
 				byte[] buffer = new byte[longitud];
 				in.readFully(buffer, 0, buffer.length);
 				return buffer;
@@ -121,7 +121,5 @@ public class ConexionSocket implements Conexion {
 		}
 
 	}
-
-
 
 }

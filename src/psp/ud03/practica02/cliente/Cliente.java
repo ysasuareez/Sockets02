@@ -43,11 +43,11 @@ public class Cliente {
 
 		try {
 
-			//Recibimos el array de confirmacion
+			// Recibimos el array
 			byte[] buffer = conexion.recibirBytes();
 
 			// Traducimos la respuesta para comprobar si el archivo se ha encontrado
-			// o no, sabiendo que será el primer envio del server
+			// o no, sabiendo que el OK\n\r estará al principio
 			String respuesta = new String(buffer, StandardCharsets.UTF_8);
 			// Si es OK comenzamos
 			if (respuesta.startsWith("OK\n\r")) {
@@ -55,15 +55,14 @@ public class Cliente {
 				// Creamos el FileOutputStream para poder introducir los bytes recibidos
 				fos = new FileOutputStream(nuevoFichero);
 
-				// Mientras el cliente siga recibiendo bytes,
-				buffer = conexion.recibirBytes();
-
 				// Traducimos lo recibido para visualizarlo en pantalla
 				respuesta = new String(buffer, StandardCharsets.UTF_8);
 				System.out.println("\nRecibido:\n" + buffer);
 				System.out.println("\nTraduccion:\n" + respuesta);
 				System.out.println("\nCreando...");
-				fos.write(buffer);
+
+				// Escribimos en el fos obviando los 4 primeros bytes que pertenecen al OK\n\r
+				fos.write(buffer, 4, buffer.length - 4);
 
 				// Cerramos el FileOutputStream
 				fos.flush();

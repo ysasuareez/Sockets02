@@ -20,19 +20,20 @@ public class Worker extends Thread {
 
 		String peticion = null;
 
-		//Recibe la ruta del archivo a procesar y la impirme para comprobar por consola
+		// Recibe la ruta del archivo a procesar y la impirme para comprobar por consola
 		peticion = conexion.recibir();
 		System.out.println("Peticion: " + peticion);
-		
-		//Creamos con esa ruta el fichero para comprobar si dicha ruta existe y 
-		//a su vez es un fichero y no un directorio
+
+		// Creamos con esa ruta el fichero para comprobar si dicha ruta existe y
+		// a su vez es un fichero y no un directorio
 		File f = new File(peticion);
 
-		//Si cumple los requisitos envia un array de bytes de OK para que el cliente
-		//sepa si debe o no crear el nuevo fichero. Enviamos tambien los bytes del fichero 
+		// Si cumple los requisitos envia un array de bytes de OK para que el cliente
+		// sepa si debe o no crear el nuevo fichero. Enviamos tambien los bytes del
+		// fichero
 		if (f.exists() && !f.isDirectory()) {
-			conexion.enviarBytes("OK\n\r".getBytes());
-			conexion.enviarBytes(ficheroBytes(f));
+			byte[] respuesta = "OK\n\r".getBytes();
+			conexion.enviarBytes(concat(respuesta, ficheroBytes(f)));
 			System.out.println("\nEnviando...\n       " + ficheroBytes(f));
 		} else {
 			conexion.enviarBytes("KO\n\r".getBytes());
@@ -42,6 +43,7 @@ public class Worker extends Thread {
 
 	/**
 	 * Metodo que devuelve los bytes de un fichero
+	 * 
 	 * @param f, fichero al que sacar el array de bytes
 	 * @return array de bytes a devolver
 	 */
@@ -49,6 +51,25 @@ public class Worker extends Thread {
 		try {
 			return Files.readAllBytes(f.toPath());
 		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Método que concatena dos arrays pasados por parametros
+	 * 
+	 * @param first
+	 * @param second
+	 * @return la suma de los dos
+	 */
+	public static byte[] concat(byte[] first, byte[] second) {
+
+		if (first.length > 0 && second.length > 0) {
+			byte[] result = new byte[first.length + second.length];
+			System.arraycopy(first, 0, result, 0, first.length);
+			System.arraycopy(second, 0, result, first.length, second.length);
+			return result;
+		} else {
 			return null;
 		}
 
